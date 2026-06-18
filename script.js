@@ -80,3 +80,40 @@ $(document).ready(function () {
     }
   });
 });
+
+// Contact form submission with Node.js backend
+document.getElementById('contact-form').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const name = document.querySelector('input[name="name"]').value;
+  const email = document.querySelector('input[name="email"]').value;
+  const subject = document.querySelector('input[name="subject"]').value;
+  const message = document.querySelector('textarea[name="message"]').value;
+
+  try {
+    const response = await fetch('/send-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        subject: subject,
+        message: message
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert('✓ Message sent successfully! Thank you for reaching out.');
+      document.getElementById('contact-form').reset();
+    } else {
+      alert('✗ Error: ' + data.error);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('✗ Failed to send message. Please try again later.');
+  }
+});

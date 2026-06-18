@@ -1,3 +1,6 @@
+// Initialize EmailJS
+emailjs.init("YOUR_PUBLIC_KEY");
+
 $(document).ready(function () {
   $(window).scroll(function () {
     // sticky navbar on scroll script
@@ -81,39 +84,33 @@ $(document).ready(function () {
   });
 });
 
-// Contact form submission with Node.js backend
-document.getElementById('contact-form').addEventListener('submit', async function (e) {
+// Contact form submission
+document.getElementById('contact-form').addEventListener('submit', function (e) {
   e.preventDefault();
 
-  const name = document.querySelector('input[name="name"]').value;
-  const email = document.querySelector('input[name="email"]').value;
-  const subject = document.querySelector('input[name="subject"]').value;
-  const message = document.querySelector('textarea[name="message"]').value;
+  const submitBtn = document.getElementById('submit-btn');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Sending...';
+  submitBtn.disabled = true;
 
-  try {
-    const response = await fetch('/send-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: name,
-        email: email,
-        subject: subject,
-        message: message
-      })
-    });
+  const name = document.getElementById('user_name').value;
+  const email = document.getElementById('user_email').value;
+  const subject = document.getElementById('subject').value;
+  const message = document.getElementById('message').value;
 
-    const data = await response.json();
-
-    if (data.success) {
-      alert('✓ Message sent successfully! Thank you for reaching out.');
-      document.getElementById('contact-form').reset();
-    } else {
-      alert('✗ Error: ' + data.error);
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('✗ Failed to send message. Please try again later.');
-  }
+  emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+    user_name: name,
+    user_email: email,
+    subject: subject,
+    message: message
+  }).then(function() {
+    alert('Message sent successfully!');
+    document.getElementById('contact-form').reset();
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+  }, function(error) {
+    alert('Error sending message');
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+  });
 });

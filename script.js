@@ -1,5 +1,5 @@
 // Initialize EmailJS
-emailjs.init("YOUR_PUBLIC_KEY");
+emailjs.init("-a5f-Vf_Ir80ue-LO");
 
 $(document).ready(function () {
   $(window).scroll(function () {
@@ -90,7 +90,7 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
 
   const submitBtn = document.getElementById('submit-btn');
   const originalText = submitBtn.textContent;
-  submitBtn.textContent = 'Sending...';
+ emailjs.send('service_ad5ko24', 'template_ft35oge', {
   submitBtn.disabled = true;
 
   const name = document.getElementById('user_name').value;
